@@ -3,7 +3,7 @@ use std::{env::args, fs::write, iter::IntoIterator};
 use image::{imageops::FilterType, io::Reader, GenericImageView, Rgba};
 use itertools::Itertools;
 use serde::{Deserialize, Serialize};
-use serde_json::{from_str, to_string};
+use serde_json::to_string;
 
 #[serde_with::skip_serializing_none]
 #[derive(Serialize, Deserialize, Debug)]
@@ -69,6 +69,7 @@ fn main() {
         );
     let tables = image
         .pixels()
+        .filter(|(_, _, colour)| colour != &Rgba([255; 4]))
         .chunks(10_000)
         .into_iter()
         .map(|chunk| {
